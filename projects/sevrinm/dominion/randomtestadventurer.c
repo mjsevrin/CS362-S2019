@@ -41,7 +41,7 @@ int main ()
     int handCountFailures = 0;
     int treasureCountFailures = 0;
     printf("TESTING: Adventurer\n"); 
-    while(noDiscard < 10)
+    while(noDiscard < 25)
     {
         testCount++;
         numPlayer = rand() % MAX_PLAYERS + 1;

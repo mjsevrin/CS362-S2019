@@ -41,21 +41,21 @@ int main ()
         G.handCount[p] = rand() % 15 + 1;
         for(i = 0; i < G.handCount[p]; i++)
         {
-            G.hand[p][i] = (enum CARD)(rand() % 27);  // generate copper, silver, or gold
+            G.hand[p][i] = (enum CARD)(rand() % 27);  // generate random card
         }
 
         // set deck
         G.deckCount[p] = rand() % MAX_DECK;
         for(i = 0; i < G.deckCount[p]; i++)
         {
-            G.deck[p][i] = (enum CARD)(rand() % 27);  // generate copper, silver, or gold
+            G.deck[p][i] = (enum CARD)(rand() % 27);  // generate random card
         }
 
         // set discard
         G.discardCount[p] = rand() % MAX_DECK;
         for(i = 0; i < G.discardCount[p]; i++)
         {
-            G.discard[p][i] = (enum CARD)(rand() % 27);  // generate copper, silver, or gold
+            G.discard[p][i] = (enum CARD)(rand() % 27);  // generate random card
         }
 
         i = rand() % G.handCount[p];

@@ -16,6 +16,7 @@
  */
 
 import junit.framework.TestCase;
+import java.io.*;
 
 /**
  * Performs Validation Test for url validations.
@@ -37,6 +38,52 @@ protected void setUp() {
          testPartsIndex[index] = 0;
       }
    }
+
+//   reading method taken from caveofprogramming.com
+   public void test() {
+       long options =
+               UrlValidator.ALLOW_2_SLASHES
+                   + UrlValidator.ALLOW_ALL_SCHEMES
+                   + UrlValidator.NO_FRAGMENTS;
+        // The name of the file to open.
+        String fileName = "500urls.txt";
+//        String fileName = "Badurls.txt";
+
+        // This will reference one line at a time
+        String line = null;
+
+        try {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(fileName);
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            
+            UrlValidator urlVal = new UrlValidator(null, null, options);
+
+            while((line = bufferedReader.readLine()) != null) {
+//            	test here
+                System.out.println(line);
+                assertTrue(urlVal.isValid("https://" + line));
+                System.out.println("The above assert is true");
+            }   
+
+            // Always close files.
+            bufferedReader.close();         
+        }
+        catch(FileNotFoundException ex) {
+            System.out.println(
+                "Unable to open file '" + 
+                fileName + "'");                
+        }
+        catch(IOException e) {
+            System.out.println(
+                "Error reading file '" 
+                + fileName + "'");                  
+            // Or we could just do this: 
+            // ex.printStackTrace();
+        }
+    }
 
    public void testIsValid() {
         testIsValid(testUrlParts, UrlValidator.ALLOW_ALL_SCHEMES);
@@ -92,16 +139,16 @@ protected void setUp() {
           StringBuilder testBuffer = new StringBuilder();
          boolean expected = true;
          
-         for (int testPartsIndexIndex = 0; testPartsIndexIndex < 0; ++testPartsIndexIndex) {
+         for (int testPartsIndexIndex = 0; testPartsIndexIndex < testPartsIndex.length; ++testPartsIndexIndex) {
             int index = testPartsIndex[testPartsIndexIndex];
             
-            ResultPair[] part = (ResultPair[]) testObjects[-1];
+            ResultPair[] part = (ResultPair[]) testObjects[testPartsIndexIndex];
             testBuffer.append(part[index].item);
             expected &= part[index].valid;
          }
          String url = testBuffer.toString();
          
-         boolean result = !urlVal.isValid(url);
+         boolean result = urlVal.isValid(url);
          assertEquals(url, expected, result);
          if (printStatus) {
             if (printIndex) {

@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
+import java.io.*;
 import junit.framework.TestCase;
+import java.util.Random;
 
 /**
  * Performs Validation Test for url validations.
@@ -36,6 +38,104 @@ protected void setUp() {
       for (int index = 0; index < testPartsIndex.length - 1; index++) {
          testPartsIndex[index] = 0;
       }
+   }
+   
+   public void test_random()
+   {
+	   long options =
+               UrlValidator.ALLOW_2_SLASHES
+                   + UrlValidator.ALLOW_ALL_SCHEMES
+                   + UrlValidator.NO_FRAGMENTS;
+	   
+	   UrlValidator urlVal = new UrlValidator(null, null, options);
+	   
+	   String [][] TestProtocols = new String [][]{
+		   {
+			   "https://",
+			   "http://",
+			   "ftp://"  
+		   },
+		   {
+		   		"htps://",
+		   		"http:/",
+		   		"http//",
+		   		"bad://"
+		   }
+	   };
+	   
+	   String [][] TestDomain = new String [][]{
+		   {
+			   "google.com",
+			   "www.google.com",
+			   "google.fr",
+			   "microsoft.be",
+			   "asus.edu",
+			   "nato.org",
+			   "192.168.1.1"
+		   },
+		   {
+			   "google..com",
+			   "ww.google.com",
+			   "googlefr",
+			   "1.2.3"
+		   }
+	   };
+	   
+	   String [][] TestPorts = new String [][]{
+		   {
+			   ":80",
+			   ""
+		   },
+		   {
+			   ":-1",
+			   ":545132154"
+		   }
+	   };
+	   
+	   
+	   int testCount = 0;
+	   Random rand = new Random();
+	   
+	   while(testCount < 1000)
+	   {
+		   String testUrl = "";
+		   boolean goodUrl = true;
+		   int i_1;
+		   int i_2;
+		   int[] indices = new int[3];
+		   
+		   //generate indices
+		   for(int i = 0; i < indices.length; i++)
+		   {
+			   indices[i] = rand.nextInt(1);
+			   if(indices[i] != 0)
+			   {
+				   goodUrl = false;
+			   }
+		   }
+		      
+		   //add protocol
+		   i_1 = indices[0];
+		   i_2 =  rand.nextInt(TestProtocols[i_1].length);
+		   testUrl = testUrl.concat(TestProtocols[i_1][i_2]);
+		   
+		   // add domain
+		   i_1 = indices[1];
+		   i_2 =  rand.nextInt(TestDomain[i_1].length);
+		   testUrl = testUrl.concat(TestDomain[i_1][i_2]); 
+		   
+		   // add port
+		   i_1 = indices[2];
+		   i_2 =  rand.nextInt(TestPorts[i_1].length);
+		   testUrl = testUrl.concat(TestPorts[i_1][i_2]);
+		   
+		   // test
+		   boolean testResult = urlVal.isValid(testUrl);
+		   assertSame(testResult, goodUrl);
+		   
+		   testCount++;
+	   }
+	   
    }
 
    public void testIsValid() {
